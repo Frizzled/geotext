@@ -10,6 +10,8 @@ Add the geotext class to any HTML entity (div, span, input, etc.) and it will be
 
 ## Adding geotext to a webpage
 ```
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//maps.google.com/maps/api/js?sensor=false"></script>
 <script>
 jQuery(function() { 
 	new GeoText();	
