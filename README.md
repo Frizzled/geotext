@@ -8,6 +8,15 @@ Add the geotext class to any HTML entity (div, span, input, etc.) and it will be
 - Requires **Google Maps API**
 - Requires **jQuery**
 
+## Adding geotext to a webpage
+```
+<script>
+jQuery(function() { 
+	new GeoText();	
+});
+</script>
+```
+
 ## Examples
 ```
 <span class="geotext[city,state]"></span>
