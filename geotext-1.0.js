@@ -12,12 +12,12 @@ var GeoText = (function ($, undefined) {
 			'name' : 'default',
 			'delimiter' : ', '
 		};
-		this.data = { // Settings
+		this.data = { // Geodata
 			'success' : false
 		};
 
 		// Merge settings
-		if (typeof vars !== 'undefined') this.vars = $.extend(this.vars, vars);
+		if (typeof vars !== 'undefined') { this.vars = $.extend(this.vars, vars); }
 
 		this.init();
 	}

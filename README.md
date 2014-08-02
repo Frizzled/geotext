@@ -19,7 +19,7 @@ jQuery(function() {
 
 ## Examples
 ```
-<span class="geotext[city,state]"></span>
+Your city, state and zip code: <span class="geotext[city,state,zip]"></span>
 <input name="country" class="geotext[country]" />
 ```
 
