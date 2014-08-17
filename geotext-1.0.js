@@ -7,17 +7,19 @@
  * Released under the MIT license
  */
 var GeoText = (function ($, undefined) {
+	'use strict';
+	
 	function GeoText(vars) {
 		this.vars = { // Settings
 			'name' : 'default',
 			'delimiter' : ', '
 		};
-		this.data = { // Geodata
+		this.data = { // Settings
 			'success' : false
 		};
 
 		// Merge settings
-		if (typeof vars !== 'undefined') { this.vars = $.extend(this.vars, vars); }
+		if (vars !== undefined) { this.vars = $.extend(this.vars, vars); }
 
 		this.init();
 	}
@@ -29,87 +31,85 @@ var GeoText = (function ($, undefined) {
 				function (location) {
 					var point = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
 					new google.maps.Geocoder().geocode({'latLng': point}, function (res, status) {
-						if(status == google.maps.GeocoderStatus.OK && typeof res[0] !== 'undefined') {
+						if(status === google.maps.GeocoderStatus.OK && res[0] !== undefined) {
 							that.setLocation(res[0]);
 						}
 					});
 				}
 			);
 		}
-	}
+	};
 
 	GeoText.prototype.setLocation = function(location) {
 		var that = this;
 		that.data.success = true;
-		jQuery.each(location.address_components, function(k,v1) {
-			jQuery.each(v1.types, function(k2, v2) { 
+		$.each(location.address_components, function(k,v1) {
+			$.each(v1.types, function(k2, v2) { 
 				that.data[v2]=v1.short_name;
 				that.data[v2+'_long']=v1.long_name;
 			});
 		});
 		that.applyText();
-	}
+	};
 
 	GeoText.prototype.applyText = function() {
 		var that = this;
 		var geoFields = $('[class*=geotext]');
 		$.each(geoFields, function(key, field) {
 			var $field = $(field);
-			var delimiter = ($field.data('geotext-delimiter'))?$field.data('geotext-delimiter'):that.vars.delimiter;
-			var geoText = that.parseField($field, delimiter);
-			if (geoText) {
+			var delimiter = $field.data('geotext-delimiter') || that.vars.delimiter;
+			var text = that.parseField($field, delimiter);
+			if (text) {
 				// Check for leading or following text
-				if ($field.data('geotext-text-before')) geoText = $field.data('geotext-text-before') + geoText;
-				if ($field.data('geotext-text-after')) geoText = geoText + $field.data('geotext-text-after');
+				if ($field.data('geotext-text-before')) { text = $field.data('geotext-text-before') + text; }
+				if ($field.data('geotext-text-after')) { text = text + $field.data('geotext-text-after'); }
 
 				if ($field.is('input')) {
-					$field.val(geoText);
+					$field.val(text).change();
 				} else {
-					$field.html(geoText);
+					$field.html(text);
 				}
 			}
 		});	
-		
-	}
+	};
 
 	GeoText.prototype.parseField = function(field, delimiter) {
 		var that = this;
 
 		// Get rules
 		var getRules = /geotext\[(.*)\]/.exec(field.attr('class'));
-		if (!getRules) return false;
+		if (!getRules) { return false; }
 		var str = getRules[1];
 		var rules = str.split(/\[|,|\]/);
 		$.each (rules, function(key, rule) {
 			rules[key] = rule.replace(" ", "");
-			if (rules[key] === '') delete rules[key];
+			if (rules[key] === '') { delete rules[key]; }
 		});
 
 		// Generate text
-		var geoText = '';
+		var text = '';
 		$.each (rules, function(key, rule) {
 			try {
 				switch (rule) {
-					case "address": geoText += that.data.street_number +' '+ that.data.route; break;
-					case "street": geoText += that.data.route; break;
-					case "street-long": geoText += that.data.route-long; break;
-					case "city": geoText += that.data.locality; break;
-					case "city-state": geoText += that.data.locality +delimiter+ that.data.administrative_area_level_1; break;
-					case "city-state-zip": geoText += that.data.locality +delimiter+ that.data.administrative_area_level_1 + ' ' + that.data.postal_code; break;
-					case "state": geoText += that.data.administrative_area_level_1; break;
-					case "state-long": geoText += that.data.administrative_area_level_1_long; break;
-					case "zip": geoText += that.data.postal_code; break;
-					case "county": geoText += that.data.administrative_area_level_2; break;
-					case "country": geoText += that.data.country; break;
-					case "country-long": geoText += that.data.country_long; break;
+					case "address": text += that.data.street_number +' '+ that.data.route; break;
+					case "street": text += that.data.route; break;
+					case "street-long": text += that.data.route_long; break;
+					case "city": text += that.data.locality; break;
+					case "city-state": text += that.data.locality +delimiter+ that.data.administrative_area_level_1; break;
+					case "city-state-zip": text += that.data.locality +delimiter+ that.data.administrative_area_level_1 + ' ' + that.data.postal_code; break;
+					case "state": text += that.data.administrative_area_level_1; break;
+					case "state-long": text += that.data.administrative_area_level_1_long; break;
+					case "zip": text += that.data.postal_code; break;
+					case "county": text += that.data.administrative_area_level_2; break;
+					case "country": text += that.data.country; break;
+					case "country-long": text += that.data.country_long; break;
 				}
-				if (typeof rules[(key+1)] !== 'undefined') geoText += delimiter;
-			} catch (err) {}
+				if (rules[(key+1)] !== undefined) { text += delimiter; }
+			} catch (ignore) {}
 		});
 
-		return geoText;
-	}
+		return text;
+	};
 
 	return GeoText;
 })(jQuery);
-

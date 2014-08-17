@@ -11,7 +11,7 @@ Add the geotext class to any HTML entity (div, span, input, etc.) and it will be
 ## Adding geotext to a webpage
 ```
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="//maps.google.com/maps/api/js?sensor=false"></script>
+<script src="//maps.google.com/maps/api/js"></script>
 <script>
 jQuery(function() { 
 	new GeoText();	
@@ -21,7 +21,11 @@ jQuery(function() {
 
 ## Examples
 ```
-Your city, state and zip code: <span class="geotext[city,state,zip]"></span>
+Your city, state and zip code: <span class="geotext[city,state,zip]">Processing ... (will be removed after Geo-location look-up)</span>
+
+<input name="city" class="geotext[city]" />
+<input name="state" class="geotext[state]" />
+<input name="zip" class="geotext[zip]" />
 <input name="country" class="geotext[country]" />
 ```
 
