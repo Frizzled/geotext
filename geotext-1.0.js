@@ -6,7 +6,7 @@
  * Copyright (c) 2014 Vladimir Loscutoff
  * Released under the MIT license
  */
-var GeoText = (function ($, undefined) {
+var GeoText = (function ($, gMaps, undefined) {
 	'use strict';
 	
 	function GeoText(vars) {
@@ -29,9 +29,9 @@ var GeoText = (function ($, undefined) {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
 				function (location) {
-					var point = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
-					new google.maps.Geocoder().geocode({'latLng': point}, function (res, status) {
-						if(status === google.maps.GeocoderStatus.OK && res[0] !== undefined) {
+					var point = new gMaps.LatLng(location.coords.latitude, location.coords.longitude);
+					new gMaps.Geocoder().geocode({'latLng': point}, function (res, status) {
+						if(status === gMaps.GeocoderStatus.OK && res[0] !== undefined) {
 							that.setLocation(res[0]);
 						}
 					});
@@ -112,4 +112,4 @@ var GeoText = (function ($, undefined) {
 	};
 
 	return GeoText;
-})(jQuery);
+})(jQuery, gMaps);
