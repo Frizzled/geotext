@@ -112,4 +112,4 @@ var GeoText = (function ($, gMaps, undefined) {
 	};
 
 	return GeoText;
-})(jQuery, gMaps);
+})(jQuery, google.maps);
